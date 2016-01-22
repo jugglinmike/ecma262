@@ -5986,6 +5986,23 @@
     <p>In most situations only the running execution context (the top of the execution context stack) is directly manipulated by algorithms within this specification. Hence when the terms &ldquo;LexicalEnvironment&rdquo;, and &ldquo;VariableEnvironment&rdquo; are used without qualification they are in reference to those components of the running execution context.</p>
     <p>An execution context is purely a specification mechanism and need not correspond to any particular artefact of an ECMAScript implementation. It is impossible for ECMAScript code to directly access or observe an execution context.</p>
 
+    <emu-clause id="sec-createexecutioncontext" aoid="CreateExecutionContext">
+      <h1>CreateExecutionContext ( _func_,  _realm_, _scriptOrModule_ [ , _varEnv_, _lexEnv_ ] )</h1>
+      <p></p>
+
+      <emu-alg>
+        1. Let _cxt_ be a new ECMAScript code execution context.
+        1. Set the _cxt_'s Function to _func_.
+        1. Set the _cxt_'s Realm to _realm_.
+        1. Set the _cxt_'s ScriptOrModule to _scriptOrModule_.
+        1. If _varEnv_ is not *undefined*, then
+          1. Set the _cxt_'s VariableEnvironment to _varEnv_.
+        1. If _lexEnv_ is not *undefined*, then
+          1. Set the _cxt_'s LexicalEnvironment to _lexEnv_.
+        1. Return _ctx_.
+      </emu-alg>
+    </emu-clause>
+
     <emu-clause id="sec-getactivescriptormodule" aoid="GetActiveScriptOrModule">
       <h1>GetActiveScriptOrModule ()</h1>
       <p>The GetActiveScriptOrModule abstract operation is used to determine the running script or module, based on the active function object. GetActiveScriptOrModule performs the following steps:</p>
