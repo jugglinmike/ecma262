@@ -5991,6 +5991,7 @@
       <p></p>
 
       <emu-alg>
+        1. If the execution context stack cannot support another context due to system resource limits, throw a RangeError.
         1. Let _cxt_ be a new ECMAScript code execution context.
         1. Set the _cxt_'s Function to _func_.
         1. Set the _cxt_'s Realm to _realm_.
