@@ -9629,7 +9629,7 @@
           Eval code is strict mode code if it begins with a Directive Prologue that contains a Use Strict Directive or if the call to `eval` is a direct eval that is contained in strict mode code.
         </li>
         <li>
-          Function code is strict mode code if the associated |FunctionDeclaration|, |FunctionExpression|, |GeneratorDeclaration|, |GeneratorExpression|, |AsyncFunctionDeclaration|, |AsyncFunctionExpression|, |AsyncGeneratorDeclaration|, |AsyncGeneratorExpression|, |MethodDefinition|, |ArrowFunction|, or |AsyncArrowFunction| is contained in strict mode code or if the code that produces the value of the function's [[ECMAScriptCode]] internal slot begins with a Directive Prologue that contains a Use Strict Directive.
+          For all other function-defining nonterminals (i.e. |FunctionDeclaration|, |FunctionExpression|, |GeneratorDeclaration|, |GeneratorExpression|, |AsyncFunctionDeclaration|, |AsyncFunctionExpression|, |AsyncGeneratorDeclaration|, |AsyncGeneratorExpression|, |MethodDefinition|, |ArrowFunction|, and |AsyncArrowFunction|), all source code matching the nonterminal is strict mode code if contained in strict mode code or if the code that produces the value of the function's [[ECMAScriptCode]] internal slot beginswith a Directive Prologue that contains a Use Strict Directive.
         </li>
         <li>
           Function code that is supplied as the arguments to the built-in `Function`, `Generator`, `AsyncFunction`, and `AsyncGenerator` constructors is strict mode code if the last argument is a String that when processed is a |FunctionBody| that begins with a Directive Prologue that contains a Use Strict Directive.
@@ -12769,7 +12769,7 @@
           1. Let _propertyNameValue_ be ? GetValue(_propertyNameReference_).
           1. Let _bv_ be ? RequireObjectCoercible(_baseValue_).
           1. Let _propertyKey_ be ? ToPropertyKey(_propertyNameValue_).
-          1. If the code matched by this |MemberExpression| is strict mode code, let _strict_ be *true*, else let _strict_ be *false*.
+          1. If |MemberExpression| is strict, let _strict_ be *true*, else let _strict_ be *false*.
           1. Return a value of type Reference whose base value component is _bv_, whose referenced name component is _propertyKey_, and whose strict reference flag is _strict_.
         </emu-alg>
         <emu-grammar>MemberExpression : MemberExpression `.` IdentifierName</emu-grammar>
@@ -12778,7 +12778,7 @@
           1. Let _baseValue_ be ? GetValue(_baseReference_).
           1. Let _bv_ be ? RequireObjectCoercible(_baseValue_).
           1. Let _propertyNameString_ be StringValue of |IdentifierName|.
-          1. If the code matched by this |MemberExpression| is strict mode code, let _strict_ be *true*, else let _strict_ be *false*.
+          1. If |MemberExpression| is strict, let _strict_ be *true*, else let _strict_ be *false*.
           1. Return a value of type Reference whose base value component is _bv_, whose referenced name component is _propertyNameString_, and whose strict reference flag is _strict_.
         </emu-alg>
         <emu-grammar>CallExpression : CallExpression `[` Expression `]`</emu-grammar>
@@ -18628,10 +18628,10 @@
       </emu-grammar>
       <ul>
         <li>
-          If the source code matching this production is strict mode code, the Early Error rules for <emu-grammar>UniqueFormalParameters : FormalParameters</emu-grammar> are applied.
+          If the |FunctionDeclaration| or |FunctionExpression| is strict, the Early Error rules for <emu-grammar>UniqueFormalParameters : FormalParameters</emu-grammar> are applied.
         </li>
         <li>
-          If the source code matching this production is strict mode code, it is a Syntax Error if |BindingIdentifier| is present and the StringValue of |BindingIdentifier| is `"eval"` or `"arguments"`.
+          If the |FunctionDeclaration| or |FunctionExpression| is strict, it is a Syntax Error if |BindingIdentifier| is present and the StringValue of |BindingIdentifier| is `"eval"` or `"arguments"`.
         </li>
         <li>
           It is a Syntax Error if ContainsUseStrict of |FunctionBody| is *true* and IsSimpleParameterList of |FormalParameters| is *false*.
@@ -19014,7 +19014,7 @@
       <emu-see-also-para op="InstantiateFunctionObject"></emu-see-also-para>
       <emu-grammar>FunctionDeclaration : `function` BindingIdentifier `(` FormalParameters `)` `{` FunctionBody `}`</emu-grammar>
       <emu-alg>
-        1. If the function code for |FunctionDeclaration| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |FunctionDeclaration| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _name_ be StringValue of |BindingIdentifier|.
         1. Let _F_ be FunctionCreate(~Normal~, |FormalParameters|, |FunctionBody|, _scope_, _strict_).
         1. Perform MakeConstructor(_F_).
@@ -19049,7 +19049,7 @@
       </emu-alg>
       <emu-grammar>FunctionExpression : `function` `(` FormalParameters `)` `{` FunctionBody `}`</emu-grammar>
       <emu-alg>
-        1. If the function code for |FunctionExpression| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |FunctionExpression| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the LexicalEnvironment of the running execution context.
         1. Let _closure_ be FunctionCreate(~Normal~, |FormalParameters|, |FunctionBody|, _scope_, _strict_).
         1. Perform MakeConstructor(_closure_).
@@ -19057,7 +19057,7 @@
       </emu-alg>
       <emu-grammar>FunctionExpression : `function` BindingIdentifier `(` FormalParameters `)` `{` FunctionBody `}`</emu-grammar>
       <emu-alg>
-        1. If the function code for |FunctionExpression| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |FunctionExpression| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the running execution context's LexicalEnvironment.
         1. Let _funcEnv_ be NewDeclarativeEnvironment(_scope_).
         1. Let _envRec_ be _funcEnv_'s EnvironmentRecord.
@@ -19328,7 +19328,7 @@
       <h1>Runtime Semantics: Evaluation</h1>
       <emu-grammar>ArrowFunction : ArrowParameters `=&gt;` ConciseBody</emu-grammar>
       <emu-alg>
-        1. If the function code for this |ArrowFunction| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |ArrowFunction| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the LexicalEnvironment of the running execution context.
         1. Let _parameters_ be CoveredFormalsList of |ArrowParameters|.
         1. Let _closure_ be FunctionCreate(~Arrow~, _parameters_, |ConciseBody|, _scope_, _strict_).
@@ -19473,7 +19473,7 @@
       <emu-alg>
         1. Let _propKey_ be the result of evaluating |PropertyName|.
         1. ReturnIfAbrupt(_propKey_).
-        1. If the function code for this |MethodDefinition| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |MethodDefinition| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the running execution context's LexicalEnvironment.
         1. If _functionPrototype_ is present as a parameter, then
           1. Let _kind_ be ~Normal~.
@@ -19504,7 +19504,7 @@
       <emu-alg>
         1. Let _propKey_ be the result of evaluating |PropertyName|.
         1. ReturnIfAbrupt(_propKey_).
-        1. If the function code for this |MethodDefinition| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |MethodDefinition| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the running execution context's LexicalEnvironment.
         1. Let _formalParameterList_ be an instance of the production <emu-grammar>FormalParameters : [empty]</emu-grammar>.
         1. Let _closure_ be FunctionCreate(~Method~, _formalParameterList_, |FunctionBody|, _scope_, _strict_).
@@ -19517,7 +19517,7 @@
       <emu-alg>
         1. Let _propKey_ be the result of evaluating |PropertyName|.
         1. ReturnIfAbrupt(_propKey_).
-        1. If the function code for this |MethodDefinition| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |MethodDefinition| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the running execution context's LexicalEnvironment.
         1. Let _closure_ be FunctionCreate(~Method~, |PropertySetParameterList|, |FunctionBody|, _scope_, _strict_).
         1. Perform MakeMethod(_closure_, _object_).
@@ -19588,10 +19588,10 @@
       </emu-grammar>
       <ul>
         <li>
-          If the source code matching this production is strict mode code, the Early Error rules for <emu-grammar>UniqueFormalParameters : FormalParameters</emu-grammar> are applied.
+          If the |GeneratorDeclaration| or |GeneratorExpression| is strict, the Early Error rules for <emu-grammar>UniqueFormalParameters : FormalParameters</emu-grammar> are applied.
         </li>
         <li>
-          If the source code matching this production is strict mode code, it is a Syntax Error if |BindingIdentifier| is present and the StringValue of |BindingIdentifier| is `"eval"` or `"arguments"`.
+          If the |GeneratorDeclaration| or |GeneratorExpression| is strict, it is a Syntax Error if |BindingIdentifier| is present and the StringValue of |BindingIdentifier| is `"eval"` or `"arguments"`.
         </li>
         <li>
           It is a Syntax Error if ContainsUseStrict of |GeneratorBody| is *true* and IsSimpleParameterList of |FormalParameters| is *false*.
@@ -19745,7 +19745,7 @@
       <emu-see-also-para op="InstantiateFunctionObject"></emu-see-also-para>
       <emu-grammar>GeneratorDeclaration : `function` `*` BindingIdentifier `(` FormalParameters `)` `{` GeneratorBody `}`</emu-grammar>
       <emu-alg>
-        1. If the function code for |GeneratorDeclaration| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |GeneratorDeclaration| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _name_ be StringValue of |BindingIdentifier|.
         1. Let _F_ be GeneratorFunctionCreate(~Normal~, |FormalParameters|, |GeneratorBody|, _scope_, _strict_).
         1. Let _prototype_ be ObjectCreate(%GeneratorPrototype%).
@@ -19775,7 +19775,7 @@
       <emu-alg>
         1. Let _propKey_ be the result of evaluating |PropertyName|.
         1. ReturnIfAbrupt(_propKey_).
-        1. If the function code for this |GeneratorMethod| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |GeneratorMethod| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the running execution context's LexicalEnvironment.
         1. Let _closure_ be GeneratorFunctionCreate(~Method~, |UniqueFormalParameters|, |GeneratorBody|, _scope_, _strict_).
         1. Perform MakeMethod(_closure_, _object_).
@@ -19792,7 +19792,7 @@
       <h1>Runtime Semantics: Evaluation</h1>
       <emu-grammar>GeneratorExpression : `function` `*` `(` FormalParameters `)` `{` GeneratorBody `}`</emu-grammar>
       <emu-alg>
-        1. If the function code for this |GeneratorExpression| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |GeneratorExpression| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the LexicalEnvironment of the running execution context.
         1. Let _closure_ be GeneratorFunctionCreate(~Normal~, |FormalParameters|, |GeneratorBody|, _scope_, _strict_).
         1. Let _prototype_ be ObjectCreate(%GeneratorPrototype%).
@@ -19801,7 +19801,7 @@
       </emu-alg>
       <emu-grammar>GeneratorExpression : `function` `*` BindingIdentifier `(` FormalParameters `)` `{` GeneratorBody `}`</emu-grammar>
       <emu-alg>
-        1. If the function code for this |GeneratorExpression| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |GeneratorExpression| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the running execution context's LexicalEnvironment.
         1. Let _funcEnv_ be NewDeclarativeEnvironment(_scope_).
         1. Let _envRec_ be _funcEnv_'s EnvironmentRecord.
@@ -19929,8 +19929,8 @@
         AsyncGeneratorExpression : `async` `function` `*` BindingIdentifier? `(` FormalParameters `)` `{` AsyncGeneratorBody `}`
       </emu-grammar>
       <ul>
-        <li>If the source code matching this production is strict mode code, the Early Error rules for <emu-grammar>UniqueFormalParameters : FormalParameters</emu-grammar> are applied.</li>
-        <li>If the source code matching this production is strict mode code, it is a Syntax Error if |BindingIdentifier| is the |IdentifierName| `eval` or the |IdentifierName| `arguments`.</li>
+        <li>If |AsyncGenertorDeclaration| or |AsyncGeneratorExpression| is strict, the Early Error rules for <emu-grammar>UniqueFormalParameters : FormalParameters</emu-grammar> are applied.</li>
+        <li>If |AsyncGenertorDeclaration| or |AsyncGeneratorExpression| is strict, it is a Syntax Error if |BindingIdentifier| is the |IdentifierName| `eval` or the |IdentifierName| `arguments`.</li>
         <li>It is a Syntax Error if ContainsUseStrict of |AsyncGeneratorBody| is *true* and IsSimpleParameterList of |FormalParameters| is *false*.</li>
         <li>It is a Syntax Error if any element of the BoundNames of |FormalParameters| also occurs in the LexicallyDeclaredNames of |AsyncGeneratorBody|.</li>
         <li>It is a Syntax Error if |FormalParameters| Contains |YieldExpression| is *true*.</li>
@@ -20062,7 +20062,7 @@
         AsyncGeneratorDeclaration : `async` [no LineTerminator here] `function` `*` BindingIdentifier `(` FormalParameters `)` `{` AsyncGeneratorBody `}`
       </emu-grammar>
       <emu-alg>
-        1. If the function code for |AsyncGeneratorDeclaration| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |AsyncGeneratorDeclaration| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _name_ be StringValue of |BindingIdentifier|.
         1. Let _F_ be ! AsyncGeneratorFunctionCreate(~Normal~, |FormalParameters|, |AsyncGeneratorBody|, _scope_, _strict_).
         1. Let _prototype_ be ! ObjectCreate(%AsyncGeneratorPrototype%).
@@ -20075,7 +20075,7 @@
         AsyncGeneratorDeclaration : `async` [no LineTerminator here] `function` `*` `(` FormalParameters `)` `{` AsyncGeneratorBody `}`
       </emu-grammar>
       <emu-alg>
-        1. If the function code for |AsyncGeneratorDeclaration| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |AsyncGeneratorDeclaration| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _F_ be AsyncGeneratorFunctionCreate(~Normal~, |FormalParameters|, |AsyncGeneratorBody|, _scope_, _strict_).
         1. Let _prototype_ be ObjectCreate(%AsyncGeneratorPrototype%).
         1. Perform DefinePropertyOrThrow(_F_, `"prototype"`, PropertyDescriptor{[[Value]]: _prototype_, [[Writable]]: *true*, [[Enumerable]]: *false*, [[Configurable]]: *false*}).
@@ -20096,7 +20096,7 @@
       <emu-alg>
         1. Let _propKey_ be the result of evaluating |PropertyName|.
         1. ReturnIfAbrupt(_propKey_).
-        1. If the function code for this |AsyncGeneratorMethod| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |AsyncGeneratorMethod| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the running execution context's LexicalEnvironment.
         1. Let _closure_ be ! AsyncGeneratorFunctionCreate(~Method~, |UniqueFormalParameters|, |AsyncGeneratorBody|, _scope_, _strict_).
         1. Perform ! MakeMethod(_closure_, _object_).
@@ -20115,7 +20115,7 @@
         AsyncGeneratorExpression : `async` [no LineTerminator here] `function` `*` `(` FormalParameters `)` `{` AsyncGeneratorBody `}`
       </emu-grammar>
       <emu-alg>
-        1. If the function code for this |AsyncGeneratorExpression| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |AsyncGeneratorExpression| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the LexicalEnvironment of the running execution context.
         1. Let _closure_ be ! AsyncGeneratorFunctionCreate(~Normal~, |FormalParameters|, |AsyncGeneratorBody|, _scope_, _strict_).
         1. Let _prototype_ be ! ObjectCreate(%AsyncGeneratorPrototype%).
@@ -20127,7 +20127,7 @@
         AsyncGeneratorExpression : `async` [no LineTerminator here] `function` `*` BindingIdentifier `(` FormalParameters `)` `{` AsyncGeneratorBody `}`
       </emu-grammar>
       <emu-alg>
-        1. If the function code for this |AsyncGeneratorExpression| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |AsyncGeneratorExpression| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the running execution context's LexicalEnvironment.
         1. Let _funcEnv_ be ! NewDeclarativeEnvironment(_scope_).
         1. Let _envRec_ be _funcEnv_'s EnvironmentRecord.
@@ -20706,7 +20706,7 @@
         AsyncFunctionDeclaration : `async` [no LineTerminator here] `function` BindingIdentifier `(` FormalParameters `)` `{` AsyncFunctionBody `}`
       </emu-grammar>
       <emu-alg>
-        1. If the function code for |AsyncFunctionDeclaration| is strict mode code, let _strict_ be *true*. Otherwise, let _strict_ be *false*.
+        1. If |AsyncFunctionDeclaration| is strict, let _strict_ be *true*. Otherwise, let _strict_ be *false*.
         1. Let _name_ be StringValue of |BindingIdentifier|.
         1. Let _F_ be ! AsyncFunctionCreate(~Normal~, |FormalParameters|, |AsyncFunctionBody|, _scope_, _strict_).
         1. Perform ! SetFunctionName(_F_, _name_).
@@ -20716,7 +20716,7 @@
         AsyncFunctionDeclaration : `async` [no LineTerminator here] `function` `(` FormalParameters `)` `{` AsyncFunctionBody `}`
       </emu-grammar>
       <emu-alg>
-        1. If the function code for |AsyncFunctionDeclaration| is strict mode code, let _strict_ be *true*. Otherwise, let _strict_ be *false*.
+        1. If |AsyncFunctionDeclaration| is strict, let _strict_ be *true*. Otherwise, let _strict_ be *false*.
         1. Let _F_ be ! AsyncFunctionCreate(~Normal~, |FormalParameters|, |AsyncFunctionBody|, _scope_, _strict_).
         1. Perform ! SetFunctionName(_F_, `"default"`).
         1. Return _F_.
@@ -20749,7 +20749,7 @@
       <emu-alg>
         1. Let _propKey_ be the result of evaluating |PropertyName|.
         1. ReturnIfAbrupt(_propKey_).
-        1. If the function code for this |AsyncMethod| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |AsyncMethod| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the LexicalEnvironment of the running execution context.
         1. Let _closure_ be ! AsyncFunctionCreate(~Method~, |UniqueFormalParameters|, |AsyncFunctionBody|, _scope_, _strict_).
         1. Perform ! MakeMethod(_closure_, _object_).
@@ -20778,7 +20778,7 @@
         AsyncFunctionExpression : `async` [no LineTerminator here] `function` `(` FormalParameters `)` `{` AsyncFunctionBody `}`
       </emu-grammar>
       <emu-alg>
-        1. If the function code for |AsyncFunctionExpression| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |AsyncFunctionExpression| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the LexicalEnvironment of the running execution context.
         1. Let _closure_ be ! AsyncFunctionCreate(~Normal~, |FormalParameters|, |AsyncFunctionBody|, _scope_, _strict_).
         1. Return _closure_.
@@ -20788,7 +20788,7 @@
         AsyncFunctionExpression : `async` [no LineTerminator here] `function` BindingIdentifier `(` FormalParameters `)` `{` AsyncFunctionBody `}`
       </emu-grammar>
       <emu-alg>
-        1. If the function code for |AsyncFunctionExpression| is strict mode code, let _strict_ be *true*. Otherwise let _strict_ be *false*.
+        1. If |AsyncFunctionExpression| is strict, let _strict_ be *true*. Otherwise let _strict_ be *false*.
         1. Let _scope_ be the LexicalEnvironment of the running execution context.
         1. Let _funcEnv_ be ! NewDeclarativeEnvironment(_scope_).
         1. Let _envRec_ be _funcEnv_'s EnvironmentRecord.
@@ -21040,7 +21040,7 @@
         AsyncArrowFunction : `async` [no LineTerminator here] AsyncArrowBindingIdentifier [no LineTerminator here] `=>` AsyncConciseBody
       </emu-grammar>
       <emu-alg>
-        1. If the function code for this |AsyncArrowFunction| is strict mode code, let _strict_ be *true*. Otherwise, let _strict_ be *false*.
+        1. If |AsyncArrowFunction| is strict, let _strict_ be *true*. Otherwise, let _strict_ be *false*.
         1. Let _scope_ be the LexicalEnvironment of the running execution context.
         1. Let _parameters_ be |AsyncArrowBindingIdentifier|.
         1. Let _closure_ be ! AsyncFunctionCreate(~Arrow~, _parameters_, |AsyncConciseBody|, _scope_, _strict_).
@@ -21050,7 +21050,7 @@
         AsyncArrowFunction : CoverCallExpressionAndAsyncArrowHead [no LineTerminator here] `=>` AsyncConciseBody
       </emu-grammar>
       <emu-alg>
-        1. If the function code for this |AsyncArrowFunction| is strict mode code, let _strict_ be *true*. Otherwise, let _strict_ be *false*.
+        1. If |AsyncArrowFunction| is strict, let _strict_ be *true*. Otherwise, let _strict_ be *false*.
         1. Let _scope_ be the LexicalEnvironment of the running execution context.
         1. Let _head_ be CoveredAsyncArrowHead of |CoverCallExpressionAndAsyncArrowHead|.
         1. Let _parameters_ be the |ArrowFormalParameters| of _head_.
